@@ -1,17 +1,5 @@
 
-<<<<<<< HEAD
-=======
-// // Toggle transparency class on navbar
-//    document.addEventListener("DOMContentLoaded", function() {
-//    var navbar = document.getElementById("navbar");
 
-//     // Check if the navbar has the transparent class
-//    if (navbar.classList.contains("navbar-transparent")) {
-//          //Remove the transparent class if it exists
-//         navbar.classList.remove("navbar-transparent");
-//     }
-// });
->>>>>>> e9288c5511d541045d87669ecedba1e12463e6a4
 
 //hamburger responsiveness 
 const hamburger = document.querySelector(".hamburger");
@@ -59,39 +47,39 @@ for (let key in projects) {
 var bgImage = document.getElementById("bgImage");
 
 var projects = {
-    trial: {
+    hks: {
         title: document.getElementById("hks"),
-        images: ['../img/117_ElLegado_Pic_3_homePage.jpg', '../img/117_ElLegado_Pic_5_homePage.jpg', '../img/117_ElLegado_Pic_7_homePage.jpg', '../img/117_ElLegado_Pic_8_homePage.jpg'],
+        images: ['/img/117_ElLegado_Pic_3_homePage.jpg', '/img/117_ElLegado_Pic_5_homePage.jpg', '/img/117_ElLegado_Pic_7_homePage.jpg', '/img/117_ElLegado_Pic_8_homePage.jpg'],
         counter: 0,
         intervalId: null
     },
     agrupa: {
         title: document.getElementById("agrupa"),
-        images: ['../img/28_AgrupaNow_HomePage_1.jpg', '../img/28_AgrupaNow_HomePage_3.jpg', '../img/28_AgrupaNow_HomePage_4.jpg', '../img/28_AgrupaNow_HomePage_2.jpg'],
+        images: ['/img/28_AgrupaNow_HomePage_1.jpg', '/img/28_AgrupaNow_HomePage_3.jpg', '/img/28_AgrupaNow_HomePage_4.jpg', '/img/28_AgrupaNow_HomePage_2.jpg'],
         counter: 0,
         intervalId: null
     },
     sonidoAcido: {
         title: document.getElementById("sonidoAcido"),
-        images: ['../img/178_binocular_1_homePage.jpg', '../img/178_binocular_2_homePage.jpg', '../img/178_binocular_3_homePage.jpg', '../img/178_binocular_4_homePage.jpg', '../img/178_binocular_5_homePage.jpg'],
+        images: ['/img/178_binocular_1_homePage.jpg', '/img/178_binocular_2_homePage.jpg', '/img/178_binocular_3_homePage.jpg', '/img/178_binocular_4_homePage.jpg', '/img/178_binocular_5_homePage.jpg'],
         counter: 0,
         intervalId: null
     },
     project4: {
         title: document.getElementById("fueraDelMolde"),
-        images: ['../img/177_FueraDelMolde_HomePage_1.jpg', '../img/177_FueraDelMolde_HomePage_2.jpg', '../img/177_FueraDelMolde_HomePage_3.jpg', '../img/177_FueraDelMolde_HomePage_4.jpg', '../img/177_FueraDelMolde_HomePage_5.jpg'],
+        images: ['/img/177_FueraDelMolde_HomePage_1.jpg', '/img/177_FueraDelMolde_HomePage_2.jpg', '/img/177_FueraDelMolde_HomePage_3.jpg', '/img/177_FueraDelMolde_HomePage_4.jpg', '/img/177_FueraDelMolde_HomePage_5.jpg'],
         counter: 0,
         intervalId: null
     },
     sprite: {
         title: document.getElementById("sprite"),
-        images: ['../img/171_SpriteDaddyYankee_1_homePage.jpg', '../img/171_SpriteDaddyYankee_3_homePage.jpg', '../img/171_SpriteDaddyYankee_12_homePage.jpg', '../img/171_SpriteDaddyYankee_13_homePage.jpg', '../img/171_SpriteDaddyYankee_14_homePage.jpg'],
+        images: ['/img/171_SpriteDaddyYankee_1_homePage.jpg', '/img/171_SpriteDaddyYankee_3_homePage.jpg', '/img/171_SpriteDaddyYankee_12_homePage.jpg', '/img/171_SpriteDaddyYankee_13_homePage.jpg', '/img/171_SpriteDaddyYankee_14_homePage.jpg'],
         counter: 0,
         intervalId: null
     },
     kraft: {
         title: document.getElementById("kraft"),
-        images: ['../img/079_kraftRicosMomentos_11_homePage.jpg', '../img/079_kraftRicosMomentos_12_homePage.jpg', '../img/079_kraftRicosMomentos_14_homePage.jpg', '../img/079_kraftRicosMomentos_15_homePage.jpg', '../img/079_kraftRicosMomentos_8_homePage.jpg'],
+        images: ['/img/079_kraftRicosMomentos_11_homePage.jpg', '/img/079_kraftRicosMomentos_12_homePage.jpg', '/img/079_kraftRicosMomentos_14_homePage.jpg', '/img/079_kraftRicosMomentos_15_homePage.jpg', '/img/079_kraftRicosMomentos_8_homePage.jpg'],
         counter: 0,
         intervalId: null
     }
