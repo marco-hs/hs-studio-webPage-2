@@ -476,6 +476,7 @@ section.projects {
     font-family: 'Roboto', sans-serif;
     /* height: calc(84.5vh); */
     height: 50vh;
+    position: static;
     
 }
 
@@ -652,9 +653,13 @@ button[type="submit"]:hover {
 /* ---> FOOTER SECTION <---  */
 
 footer {
+    position: fixed;
     background-color: #000;
+    left: 0;
+    bottom: 0;
+    width: 100%;
     color: #fff;
-    padding: 2rem;
+    padding: 2rem 0;
     text-align: center;
     font-family: 'Roboto', sans-serif;
 }
