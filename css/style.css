@@ -139,7 +139,7 @@ a{
 
     .navbar{
         padding: 0%;
-        position: absolute;
+
     }
 
     .nav-item {
@@ -588,10 +588,21 @@ button[type="submit"]:hover {
 
 @media (max-width: 798px) {
 
-    #contactPage-hero-section {
-        padding-top: 35%;
-    }
+#contactPage-hero-section {
+    position: static;
+    height: 100vh;
+}
 
+.contactPage-hero-content {
+    max-width: 600px;
+    position: relative;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    
+}
     .contact-form {
         flex-basis: 100%;
         width: 100%;
@@ -603,25 +614,12 @@ button[type="submit"]:hover {
         text-align: left;
     }
 
-    .contactPage-hero-content {
-        max-width: 600px;
-        position: relative;
-        top: 50%;
-        -ms-transform: translateY(-50%);
-        transform: translateY(-50%);
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        
-    }
-
     .contactPage-hero-text {
         flex-basis: 50%;
         text-align: center;
         margin-bottom: 0rem;
         padding: 0 7%;
+        position: relative;
     }
 
     input {
