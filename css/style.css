@@ -593,24 +593,24 @@ button[type="submit"]:hover {
         padding: 10rem 1rem;
         text-align: center;
         font-family: 'Roboto', sans-serif;
-        min-height: 100vh;
+        height: 100vh;
         position: static;
     }
 
-.contactPage-hero-content {
-    max-width: 600px;
-    position: static;
-    height: 10%;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    
-}
+    .contactPage-hero-content {
+        max-width: 600px;
+        position: static;
+        height: 10%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        
+    }
     .contact-form {
         flex-basis: 100%;
-        width: 100%;
+        width: 110%;
         padding: 1rem;
         border-radius: 10px;
         background-color: transparent;
