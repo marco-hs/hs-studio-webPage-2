@@ -139,6 +139,7 @@ a{
 
     .navbar{
         padding: 0%;
+        position: absolute;
     }
 
     .nav-item {
