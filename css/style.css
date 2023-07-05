@@ -142,8 +142,6 @@ a{
 
     .navbar{
         padding: 0%;
-        position: static;
-        background-color: #000;
     }
 
     .nav-item {
@@ -599,7 +597,8 @@ button[type="submit"]:hover {
 
 .contactPage-hero-content {
     max-width: 600px;
-    position: relative;
+    position: static;
+    height: 10%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
