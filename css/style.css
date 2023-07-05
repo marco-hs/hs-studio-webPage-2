@@ -587,6 +587,10 @@ button[type="submit"]:hover {
 
 @media (max-width: 798px) {
 
+    #contactPage-hero-section {
+        padding-top: 35%;
+    }
+
     .contact-form {
         flex-basis: 100%;
         width: 100%;
