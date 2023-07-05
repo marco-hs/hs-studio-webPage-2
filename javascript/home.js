@@ -1,4 +1,6 @@
 
+<<<<<<< HEAD
+=======
 // // Toggle transparency class on navbar
 //    document.addEventListener("DOMContentLoaded", function() {
 //    var navbar = document.getElementById("navbar");
@@ -9,6 +11,7 @@
 //         navbar.classList.remove("navbar-transparent");
 //     }
 // });
+>>>>>>> e9288c5511d541045d87669ecedba1e12463e6a4
 
 //hamburger responsiveness 
 const hamburger = document.querySelector(".hamburger");
