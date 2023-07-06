@@ -248,7 +248,7 @@ section.projects {
 
     .project-title {
         padding: 0em 0em 0em 1em; /* reduce the padding */
-        font-size: 3.75vh; /* keep the same font size */
+        font-size: 3.6vh; /* keep the same font size */
         color: white;
     }
 }
@@ -604,7 +604,6 @@ button[type="submit"]:hover {
     .contactPage-hero-content {
         max-width: 600px;
         position: relative;
-        padding: 0 5rem;
         margin: auto;
         display: flex;
         flex-direction: column;
@@ -633,20 +632,23 @@ button[type="submit"]:hover {
         margin-bottom: 1.5rem;
     }
 
-    .contactPage-hero-text.h1 {
+    .contactPage-hero-text h1 {
+        color: #fff;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        padding-top: 2rem;
+        text-transform: uppercase;
         text-align: center;
     }
 
     .contactPage-hero-text {
         flex-basis: 50%;
         margin-bottom: 0rem;
-        padding: 0 7%;
+        padding: 0;
         padding-top: 15%;
         position: relative;
     }
-
     
-
     input {
         height: 60px;
     }
