@@ -120,47 +120,5 @@ for (let key in projects) {
     });
 }
 
-const projectTitles = document.querySelectorAll('.project-title');
-
-projectTitles.forEach((projectTitle) => {
-    projectTitle.addEventListener('click', function() {
-        const videoSrc = this.getAttribute('data-video-src');
-
-        const videoElement = document.createElement('video');
-        videoElement.src = videoSrc;
-        videoElement.controls = true;
-        videoElement.style.position = 'fixed';
-        videoElement.style.width = '80vw';
-        videoElement.style.height = '80vh';
-        videoElement.style.top = '50%';
-        videoElement.style.left = '50%';
-        videoElement.style.transform = 'translate(-50%, -50%)';
-        videoElement.style.zIndex = '100';
-        videoElement.autoplay = true;
-        document.body.appendChild(videoElement);
-
-        const overlay = document.createElement('div');
-        overlay.style.position = 'fixed';
-        overlay.style.width = '100%';
-        overlay.style.height = '100%';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.zIndex = '99';
-        document.body.appendChild(overlay);
-
-        const removeVideoAndOverlay = () => {
-            videoElement.remove();
-            overlay.remove();
-        };
-
-        overlay.addEventListener('click', removeVideoAndOverlay);
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                removeVideoAndOverlay();
-            }
-        });
-    });
-});
-
 
 
