@@ -206,3 +206,20 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+// Function to set the initial language based on the browser's language
+function setInitialLanguage() {
+    // Get the browser's language
+    var browserLang = navigator.language || navigator.userLanguage;
+
+    // Check if the browser's language starts with 'es' (for Spanish)
+    if (browserLang.startsWith('es')) {
+        changeLanguage('es');
+    } else {
+        changeLanguage('en');
+    }
+}
+
+// Call the function to set the initial language
+setInitialLanguage();
+
+
