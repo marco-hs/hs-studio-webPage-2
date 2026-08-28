@@ -1,47 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marco's web page</title>
+    <title>Hernández Sánchez Studio | Producción audiovisual</title>
+    <meta name="description" content="Hernández Sánchez Studio: producción audiovisual y storytelling cinemático en Santiago, Chile.">
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
-    <video id="background-video" class="background-video" autoplay loop muted>
-        <source src="../img/000_2005_Reel_20_V01.4_VIMEO_H264-WebBg_compressed2.mp4" type="video/mp4">
+<body class="home-page">
+    <video id="background-video" class="background-video" autoplay loop muted playsinline preload="metadata" poster="../img/home-background-poster.jpg">
+        <source src="../img/home-background-mobile.mp4" type="video/mp4" media="(max-width: 768px)">
+        <source src="../img/home-background-desktop.mp4" type="video/mp4">
     </video>
 
     <div id="backgroundImage">
         <img id="bgImage" src="" alt="">
     </div>
 
-    <header class="header">
-      <nav class="navbar">
-        <a href="/html/index.html" class="logo" id="logo">
-          <img src="../img/HS-StudioLogo_v01-blackOnWhite.png" alt="HS-Studio Logo">
-        </a>
-
-        <div class="flex-container">
-          <ul class="nav-menu">
-            <!-- <li class="nav-item">
-              <a href="#about" class="nav-link">About</a>
-            </li>
-            <li class="nav-item">
-              <a href="#projects" class="nav-link">Projects</a>
-            </li> -->
-            <li class="nav-item">
-              <a href="/html/contact.html" class="contact-link nav-link">Contacto</a>
-            </li>
-          </ul>
-        </div>
-        
-        <div class="hamburger">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </div>
-      </nav>
-    </header>
+    <div data-site-header></div>
     
 
 
@@ -60,6 +36,7 @@
         </a>
         <a href="../html/06_project.html" class="project-title-link">
           <h1 class="project-title" id="kraft">Kraft - Ricos Momentos</h1>
+        </a>
 
         <a href="../html/02_project.html" class="project-title-link">
           <h1 class="project-title"  id="sonidoAcido">Sonido Ácido - Binocular</h1>
@@ -70,6 +47,7 @@
         </a> 
     </section>
 
-    <script type="text/javascript" src="/javascript/home.js"></script>
+    <script src="/javascript/layout.js"></script>
+    <script src="/javascript/home.js"></script>
 </body>
 </html>
