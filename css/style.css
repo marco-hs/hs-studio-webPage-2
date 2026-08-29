@@ -520,15 +520,13 @@ section.projects {
     font-family: 'Roboto', sans-serif;
     min-height: 100svh;
     height: auto;
-    
+    display: flex;
+    align-items: center;
 }
 
 .contactPage-hero-content {
+    width: min(100%, 1600px);
     max-width: 1600px;
-    position: relative;
-    top: 50%;
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
     margin: 0 auto;
     display: flex;
     flex-direction: row;
@@ -638,6 +636,7 @@ button[type="submit"]:hover {
         min-height: 100svh;
         height: auto;
         padding: 7rem 1rem 3rem;
+        display: block;
     }
 
     .contact-form {
@@ -654,10 +653,6 @@ button[type="submit"]:hover {
     .contactPage-hero-content {
         width: min(100%, 38rem);
         max-width: none;
-        position: relative;
-        top: auto;
-        -ms-transform: none;
-        transform: none;
         margin: 0 auto;
         display: flex;
         flex-direction: column;
