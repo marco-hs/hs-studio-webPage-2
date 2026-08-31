@@ -64,7 +64,7 @@ let lastFrameTime = 0;
 let frameIndex = 0;
 const frameDuration = 120;
 const visibleProjectCount = 5;
-const menuAnimationDuration = 380;
+const menuAnimationDuration = 620;
 let menuIsMoving = false;
 let wheelDelta = 0;
 let touchStartY = null;
@@ -180,7 +180,7 @@ function scrollProjectMenu(direction) {
         ],
         {
             duration,
-            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
             fill: 'forwards'
         }
     );
