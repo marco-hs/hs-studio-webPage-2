@@ -10,6 +10,7 @@ Keep the work itself as the visual focus. Favor cinematic imagery, strong typogr
 ## Homepage project previews
 
 - Give every homepage project title a dedicated image sequence on hover and keyboard focus.
+- Show at most five project titles at once. Reveal additional projects through a masked, cyclic vertical scroll in which one title exits as the next enters; do not expose a browser scrollbar.
 - Display the active sequence edge-to-edge across the full viewport behind the project list, using a cinematic `object-fit: cover` crop rather than a thumbnail, card, or bounded panel.
 - Keep the title list legible above the imagery and retain the background reel as the default state when no project is active.
 - Reuse the shared sequence implementation in `javascript/home.js`; add only the project trigger and optimized image set instead of creating project-specific animation logic.

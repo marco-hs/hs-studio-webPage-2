@@ -21,6 +21,8 @@ document.querySelectorAll('.nav-link').forEach((link) => {
 const bgVideo = document.getElementById('background-video');
 const bgImage = document.getElementById('bgImage');
 const backgroundImage = document.getElementById('backgroundImage');
+const projectsViewport = document.querySelector('.projects-viewport');
+const projectsTrack = document.querySelector('.projects-track');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const supportsHover = window.matchMedia('(hover: hover)').matches;
 
@@ -61,6 +63,11 @@ let activationId = 0;
 let lastFrameTime = 0;
 let frameIndex = 0;
 const frameDuration = 120;
+const visibleProjectCount = 5;
+const menuAnimationDuration = 380;
+let menuIsMoving = false;
+let wheelDelta = 0;
+let touchStartY = null;
 
 function preloadProject(project) {
     if (project.preloadPromise) {
@@ -126,6 +133,114 @@ function stopSequence() {
     bgVideo?.classList.remove('is-hidden');
 }
 
+function updateVisibleProjects() {
+    if (!projectsTrack || !projectsViewport) {
+        return;
+    }
+
+    const links = [...projectsTrack.querySelectorAll('.project-title-link')];
+    links.forEach((link, index) => {
+        const isVisible = index < visibleProjectCount;
+        link.tabIndex = isVisible ? 0 : -1;
+        link.setAttribute('aria-hidden', String(!isVisible));
+    });
+
+    if (document.activeElement?.matches('.project-title-link[aria-hidden="true"]')) {
+        projectsViewport.focus({ preventScroll: true });
+    }
+}
+
+function scrollProjectMenu(direction) {
+    if (!projectsTrack || menuIsMoving || direction === 0) {
+        return;
+    }
+
+    const links = projectsTrack.querySelectorAll('.project-title-link');
+    if (links.length <= visibleProjectCount) {
+        return;
+    }
+
+    menuIsMoving = true;
+    stopSequence();
+    projectsTrack.classList.add('is-moving');
+
+    const rowHeight = links[0].getBoundingClientRect().height;
+    const duration = reducedMotion.matches ? 0 : menuAnimationDuration;
+
+    if (direction < 0) {
+        projectsTrack.prepend(links[links.length - 1]);
+    }
+
+    const startY = direction > 0 ? 0 : -rowHeight;
+    const endY = direction > 0 ? -rowHeight : 0;
+    const animation = projectsTrack.animate(
+        [
+            { transform: `translate3d(0, ${startY}px, 0)` },
+            { transform: `translate3d(0, ${endY}px, 0)` }
+        ],
+        {
+            duration,
+            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            fill: 'forwards'
+        }
+    );
+
+    animation.finished.finally(() => {
+        if (direction > 0) {
+            projectsTrack.append(projectsTrack.firstElementChild);
+        }
+
+        animation.cancel();
+        projectsTrack.style.transform = '';
+        projectsTrack.classList.remove('is-moving');
+        menuIsMoving = false;
+        updateVisibleProjects();
+    });
+}
+
+projectsViewport?.addEventListener('wheel', (event) => {
+    event.preventDefault();
+
+    if (menuIsMoving) {
+        return;
+    }
+
+    wheelDelta += event.deltaY;
+    if (Math.abs(wheelDelta) < 24) {
+        return;
+    }
+
+    scrollProjectMenu(Math.sign(wheelDelta));
+    wheelDelta = 0;
+}, { passive: false });
+
+projectsViewport?.addEventListener('touchstart', (event) => {
+    touchStartY = event.changedTouches[0]?.clientY ?? null;
+}, { passive: true });
+
+projectsViewport?.addEventListener('touchend', (event) => {
+    if (touchStartY === null) {
+        return;
+    }
+
+    const touchEndY = event.changedTouches[0]?.clientY ?? touchStartY;
+    const distance = touchStartY - touchEndY;
+    touchStartY = null;
+
+    if (Math.abs(distance) >= 30) {
+        scrollProjectMenu(Math.sign(distance));
+    }
+}, { passive: true });
+
+projectsViewport?.addEventListener('keydown', (event) => {
+    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') {
+        return;
+    }
+
+    event.preventDefault();
+    scrollProjectMenu(event.key === 'ArrowDown' ? 1 : -1);
+});
+
 function bindProjectPreview(project) {
     if (!project.trigger) {
         return;
@@ -148,6 +263,8 @@ function bindProjectPreview(project) {
 if (bgImage && backgroundImage) {
     projects.forEach(bindProjectPreview);
 }
+
+updateVisibleProjects();
 
 if (bgVideo && reducedMotion.matches) {
     bgVideo.pause();
