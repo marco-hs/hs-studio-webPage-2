@@ -1,10 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
+html {
+    background-color: #000;
+}
+
 body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    background-color: #000;
 }
 
 *,
@@ -223,9 +228,12 @@ a{
 }
 
 #bgImage {
-    width: 100%;
-    height: 100%;
+    display: block;
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
     object-fit: cover;
+    object-position: center;
 }
 
 section.projects {
@@ -237,7 +245,7 @@ section.projects {
     min-height: 100svh;
     width: min(100% - 3rem, 68rem);
     margin: 0;
-    padding: 7rem 2rem 3rem clamp(2rem, 9vw, 10rem);
+    padding: 7rem 2rem 7rem clamp(2rem, 9vw, 10rem);
     position: relative;
     z-index: 1;
     font-family: 'Archivo Black', sans-serif;
@@ -278,7 +286,7 @@ section.projects {
     section.projects {
         width: min(100% - 2rem, 36rem);
         margin: 0 auto;
-        padding: 6.5rem 0 2rem;
+        padding: 6.5rem 0 5.5rem;
         align-items: center;
     }
 
@@ -411,6 +419,12 @@ section.projects {
 
 .projectPage-project-description p{
     padding: 0 5%;
+}
+
+.projectPage-project-description .projectPage-project-credits {
+    width: fit-content;
+    margin: 1em auto;
+    text-align: left;
 }
 
 @media (max-width: 768px) {
@@ -726,9 +740,31 @@ button[type="submit"]:hover {
 /* ---> FOOTER SECTION <---  */
 
 footer {
-    background-color: #000;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 100%;
+    background-color: transparent;
     color: #fff;
     padding: 2rem;
     text-align: center;
     font-family: 'Roboto', sans-serif;
+}
+
+footer p {
+    margin: 0;
+}
+
+.home-page footer,
+.contact-page footer {
+    z-index: 1000;
+}
+
+.hero-video-section,
+.project-section,
+.project-page-video-container,
+.gallery-grid {
+    position: relative;
+    z-index: 2;
 }

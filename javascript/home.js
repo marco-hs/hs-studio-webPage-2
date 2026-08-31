@@ -26,28 +26,32 @@ const supportsHover = window.matchMedia('(hover: hover)').matches;
 
 const projects = [
     {
+        trigger: document.getElementById('cdm'),
+        images: ['../img/529_CDM_cdm-01.webp', '../img/529_CDM_cdm-02.webp', '../img/529_CDM_cdm-03.webp', '../img/529_CDM_cdm-04.webp', '../img/529_CDM_cdm-05.webp', '../img/529_CDM_cdm-06.webp']
+    },
+    {
         trigger: document.getElementById('hks'),
-        images: ['../img/117_ElLegado_Pic_3_homePage.jpg', '../img/117_ElLegado_Pic_5_homePage.jpg', '../img/117_ElLegado_Pic_7_homePage.jpg', '../img/117_ElLegado_Pic_8_homePage.jpg']
+        images: ['../img/117_ElLegado_preview-01.webp', '../img/117_ElLegado_preview-02.webp', '../img/117_ElLegado_preview-03.webp', '../img/117_ElLegado_preview-04.webp']
     },
     {
         trigger: document.getElementById('agrupa'),
-        images: ['../img/28_AgrupaNow_HomePage_1.jpg', '../img/28_AgrupaNow_HomePage_3.jpg', '../img/28_AgrupaNow_HomePage_4.jpg', '../img/28_AgrupaNow_HomePage_2.jpg']
+        images: ['../img/28_AgrupaNow_preview-01.webp', '../img/28_AgrupaNow_preview-02.webp', '../img/28_AgrupaNow_preview-03.webp', '../img/28_AgrupaNow_preview-04.webp']
     },
     {
         trigger: document.getElementById('sonidoAcido'),
-        images: ['../img/178_binocular_1_homePage.jpg', '../img/178_binocular_2_homePage.jpg', '../img/178_binocular_3_homePage.jpg', '../img/178_binocular_4_homePage.jpg', '../img/178_binocular_5_homePage.jpg']
+        images: ['../img/178_binocular_preview-01.webp', '../img/178_binocular_preview-02.webp', '../img/178_binocular_preview-03.webp', '../img/178_binocular_preview-04.webp', '../img/178_binocular_preview-05.webp']
     },
     {
         trigger: document.getElementById('fueraDelMolde'),
-        images: ['../img/177_FueraDelMolde_HomePage_1.jpg', '../img/177_FueraDelMolde_HomePage_2.jpg', '../img/177_FueraDelMolde_HomePage_3.jpg', '../img/177_FueraDelMolde_HomePage_4.jpg', '../img/177_FueraDelMolde_HomePage_5.jpg']
+        images: ['../img/177_fueraDelMolde_preview-01.webp', '../img/177_fueraDelMolde_preview-02.webp', '../img/177_fueraDelMolde_preview-03.webp', '../img/177_fueraDelMolde_preview-04.webp', '../img/177_fueraDelMolde_preview-05.webp']
     },
     {
         trigger: document.getElementById('sprite'),
-        images: ['../img/171_SpriteDaddyYankee_1_homePage.jpg', '../img/171_SpriteDaddyYankee_3_homePage.jpg', '../img/171_SpriteDaddyYankee_12_homePage.jpg', '../img/171_SpriteDaddyYankee_13_homePage.jpg', '../img/171_SpriteDaddyYankee_14_homePage.jpg']
+        images: ['../img/171_SpriteDaddyYankee_preview-01.webp', '../img/171_SpriteDaddyYankee_preview-02.webp', '../img/171_SpriteDaddyYankee_preview-03.webp', '../img/171_SpriteDaddyYankee_preview-04.webp', '../img/171_SpriteDaddyYankee_preview-05.webp']
     },
     {
         trigger: document.getElementById('kraft'),
-        images: ['../img/079_kraftRicosMomentos_11_homePage.jpg', '../img/079_kraftRicosMomentos_12_homePage.jpg', '../img/079_kraftRicosMomentos_14_homePage.jpg', '../img/079_kraftRicosMomentos_15_homePage.jpg', '../img/079_kraftRicosMomentos_8_homePage.jpg']
+        images: ['../img/079_kraftRicosMomentos_preview-01.webp', '../img/079_kraftRicosMomentos_preview-02.webp', '../img/079_kraftRicosMomentos_preview-03.webp', '../img/079_kraftRicosMomentos_preview-04.webp', '../img/079_kraftRicosMomentos_preview-05.webp']
     }
 ];
 

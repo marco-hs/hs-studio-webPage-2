@@ -21,7 +21,7 @@ const headerMarkup = `
 
 const footerMarkup = `
   <footer>
-    <p>Made with ❤️ by HS Studio</p>
+    <p>made with ❤️ by HS Studio. 2026.</p>
   </footer>`;
 
 document.querySelectorAll('[data-site-header]').forEach((placeholder) => {
