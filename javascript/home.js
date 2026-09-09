@@ -29,53 +29,71 @@ const supportsHover = window.matchMedia('(hover: hover)').matches;
 const projects = [
     {
         trigger: document.getElementById('suspended'),
+        video: '../img/338_suspended-banner.mp4',
         images: ['../img/338_suspended-sequence-01.webp', '../img/338_suspended-sequence-02.webp', '../img/338_suspended-sequence-03.webp', '../img/338_suspended-sequence-04.webp', '../img/338_suspended-sequence-05.webp']
     },
     {
         trigger: document.getElementById('polPablo'),
+        video: '../img/350_pol-pablo-banner.mp4',
         images: ['../img/350_pol-pablo-01.webp', '../img/350_pol-pablo-02.webp', '../img/350_pol-pablo-03.webp', '../img/350_pol-pablo-05.webp', '../img/350_pol-pablo-08.webp']
     },
     {
         trigger: document.getElementById('contraCorriente'),
+        video: '../img/238_contra-corriente-banner.mp4',
         images: ['../img/238_contra-corriente-01.webp', '../img/238_contra-corriente-03.webp', '../img/238_contra-corriente-04.webp', '../img/238_contra-corriente-05.webp', '../img/238_contra-corriente-09.webp']
     },
     {
         trigger: document.getElementById('dykora'),
+        video: '../img/441_dykora-banner.mp4',
         images: ['../img/441_dykora-01.webp', '../img/441_dykora-02.webp', '../img/441_dykora-04.webp', '../img/441_dykora-06.webp', '../img/441_dykora-09.webp']
     },
     {
         trigger: document.getElementById('clubDesahuciados'),
+        video: '../img/285_club-desahuciados-banner.mp4',
         images: ['../img/285_club-desahuciados-01.webp', '../img/285_club-desahuciados-03.webp', '../img/285_club-desahuciados-05.webp', '../img/285_club-desahuciados-06.webp', '../img/285_club-desahuciados-09.webp']
     },
     {
         trigger: document.getElementById('cdm'),
+        video: '../img/529_CDM_banner_webOptimized.mp4',
         images: ['../img/529_CDM_cdm-01.webp', '../img/529_CDM_cdm-02.webp', '../img/529_CDM_cdm-03.webp', '../img/529_CDM_cdm-04.webp', '../img/529_CDM_cdm-05.webp', '../img/529_CDM_cdm-06.webp']
     },
     {
         trigger: document.getElementById('hks'),
+        video: '../img/v01-4_117_HKS BARBERIA El Legado_H264_webOptimized_Rec709_Gama2-4_noGamaShift_TCCS.mp4',
         images: ['../img/117_ElLegado_preview-01.webp', '../img/117_ElLegado_preview-02.webp', '../img/117_ElLegado_preview-03.webp', '../img/117_ElLegado_preview-04.webp']
     },
     {
         trigger: document.getElementById('agrupa'),
+        video: '../img/28_agrupaNowDownloadedFromVimeo_webOptimized.mp4',
         images: ['../img/28_AgrupaNow_preview-01.webp', '../img/28_AgrupaNow_preview-02.webp', '../img/28_AgrupaNow_preview-03.webp', '../img/28_AgrupaNow_preview-04.webp']
     },
     {
         trigger: document.getElementById('sonidoAcido'),
+        video: '../img/178_V03_2-35-1_ONLINE1_h264_webOptimized2.mp4',
         images: ['../img/178_binocular_preview-01.webp', '../img/178_binocular_preview-02.webp', '../img/178_binocular_preview-03.webp', '../img/178_binocular_preview-04.webp', '../img/178_binocular_preview-05.webp']
     },
     {
         trigger: document.getElementById('fueraDelMolde'),
+        video: '../img/177_FDM_PROMO-01_Online_webOptimized.mp4',
         images: ['../img/177_fueraDelMolde_preview-01.webp', '../img/177_fueraDelMolde_preview-02.webp', '../img/177_fueraDelMolde_preview-03.webp', '../img/177_fueraDelMolde_preview-04.webp', '../img/177_fueraDelMolde_preview-05.webp']
     },
     {
         trigger: document.getElementById('sprite'),
+        video: '../img/171_Daddy_Yankee_SM_V00_webOptimized.mp4',
         images: ['../img/171_SpriteDaddyYankee_preview-01.webp', '../img/171_SpriteDaddyYankee_preview-02.webp', '../img/171_SpriteDaddyYankee_preview-03.webp', '../img/171_SpriteDaddyYankee_preview-04.webp', '../img/171_SpriteDaddyYankee_preview-05.webp']
     },
     {
         trigger: document.getElementById('kraft'),
+        video: '../img/079_kraftRicosMomentos_09_cápsulaKraft_v01.5_16-9_h264_webOptimized_TCCs.mp4',
         images: ['../img/079_kraftRicosMomentos_preview-01.webp', '../img/079_kraftRicosMomentos_preview-02.webp', '../img/079_kraftRicosMomentos_preview-03.webp', '../img/079_kraftRicosMomentos_preview-04.webp', '../img/079_kraftRicosMomentos_preview-05.webp']
     }
 ];
+
+const mobileProjects = projectsTrack
+    ? [...projectsTrack.querySelectorAll('.project-title-link')]
+        .map((link) => projects.find((project) => project.trigger === link.querySelector('.project-title')))
+        .filter(Boolean)
+    : projects;
 
 let activeProject = null;
 let animationFrameId = null;
@@ -88,6 +106,87 @@ const menuAnimationDuration = 620;
 let menuIsMoving = false;
 let wheelDelta = 0;
 let touchStartY = null;
+let mobileProjectIndex = 0;
+let mobileVideoLayerIndex = 0;
+const mobileVideoLayers = bgVideo ? [bgVideo] : [];
+
+function isMobileProjectExperience() {
+    return window.matchMedia('(max-width: 768px)').matches;
+}
+
+function ensureMobileVideoLayers() {
+    if (!bgVideo || mobileVideoLayers.length > 1) {
+        return;
+    }
+
+    const secondLayer = bgVideo.cloneNode(false);
+    secondLayer.removeAttribute('id');
+    secondLayer.classList.add('mobile-project-video');
+    secondLayer.setAttribute('aria-hidden', 'true');
+    secondLayer.style.visibility = 'hidden';
+    bgVideo.insertAdjacentElement('afterend', secondLayer);
+    mobileVideoLayers.push(secondLayer);
+}
+
+function setVideoSource(video, project) {
+    video.dataset.projectVideo = project.video;
+    video.src = project.video;
+    video.load();
+    video.play().catch(() => {});
+}
+
+function setMobileProjectVideo(index, direction = 1, animate = false) {
+    const project = mobileProjects[index];
+    if (!isMobileProjectExperience() || !bgVideo || !project?.video) {
+        return;
+    }
+
+    ensureMobileVideoLayers();
+    const outgoingVideo = mobileVideoLayers[mobileVideoLayerIndex];
+    if (outgoingVideo.dataset.projectVideo === project.video) {
+        return;
+    }
+
+    if (!animate || reducedMotion.matches) {
+        setVideoSource(outgoingVideo, project);
+        return;
+    }
+
+    const incomingIndex = mobileVideoLayerIndex === 0 ? 1 : 0;
+    const incomingVideo = mobileVideoLayers[incomingIndex];
+    const travel = direction > 0 ? 100 : -100;
+    outgoingVideo.insertAdjacentElement('afterend', incomingVideo);
+    incomingVideo.style.visibility = 'visible';
+    setVideoSource(incomingVideo, project);
+
+    const timing = {
+        duration: menuAnimationDuration,
+        easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
+        fill: 'forwards'
+    };
+    const outgoingAnimation = outgoingVideo.animate(
+        [
+            { transform: 'translate3d(0, 0, 0) scale(1.04)' },
+            { transform: `translate3d(0, ${-travel}%, 0) scale(1.04)` }
+        ],
+        timing
+    );
+    const incomingAnimation = incomingVideo.animate(
+        [
+            { transform: `translate3d(0, ${travel}%, 0) scale(1.04)` },
+            { transform: 'translate3d(0, 0, 0) scale(1.04)' }
+        ],
+        timing
+    );
+
+    mobileVideoLayerIndex = incomingIndex;
+    Promise.all([outgoingAnimation.finished, incomingAnimation.finished]).finally(() => {
+        outgoingVideo.style.visibility = 'hidden';
+        outgoingVideo.pause();
+        outgoingAnimation.cancel();
+        incomingAnimation.cancel();
+    });
+}
 
 function preloadProject(project) {
     if (project.preloadPromise) {
@@ -191,6 +290,11 @@ function scrollProjectMenu(direction) {
     stopSequence();
     projectsTrack.classList.add('is-moving');
 
+    if (isMobileProjectExperience()) {
+        mobileProjectIndex = (mobileProjectIndex + direction + mobileProjects.length) % mobileProjects.length;
+        setMobileProjectVideo(mobileProjectIndex, direction, true);
+    }
+
     const rowHeight = links[0].getBoundingClientRect().height;
     const duration = reducedMotion.matches ? 0 : menuAnimationDuration;
 
@@ -198,8 +302,11 @@ function scrollProjectMenu(direction) {
         projectsTrack.prepend(links[links.length - 1]);
     }
 
-    const startY = direction > 0 ? 0 : -rowHeight;
-    const endY = direction > 0 ? -rowHeight : 0;
+    const mobileOffset = isMobileProjectExperience()
+        ? (projectsViewport.getBoundingClientRect().height - rowHeight) / 2 - rowHeight
+        : 0;
+    const startY = direction > 0 ? mobileOffset : mobileOffset - rowHeight;
+    const endY = direction > 0 ? mobileOffset - rowHeight : mobileOffset;
     const animation = projectsTrack.animate(
         [
             { transform: `translate3d(0, ${startY}px, 0)` },
@@ -218,7 +325,9 @@ function scrollProjectMenu(direction) {
         }
 
         animation.cancel();
-        projectsTrack.style.transform = '';
+        projectsTrack.style.transform = mobileOffset
+            ? `translate3d(0, ${mobileOffset}px, 0)`
+            : '';
         projectsTrack.classList.remove('is-moving');
         menuIsMoving = false;
         updateVisibleProjects();
@@ -283,15 +392,35 @@ function bindProjectPreview(project) {
         link.addEventListener('pointerleave', stopSequence);
     }
 
-    link.addEventListener('focus', () => startSequence(project));
-    link.addEventListener('blur', stopSequence);
+    link.addEventListener('focus', () => {
+        if (!isMobileProjectExperience()) {
+            startSequence(project);
+        }
+    });
+    link.addEventListener('blur', () => {
+        if (!isMobileProjectExperience()) {
+            stopSequence();
+        }
+    });
 }
 
 if (bgImage && backgroundImage) {
     projects.forEach(bindProjectPreview);
 }
 
+// Start with the active title centered and its predecessor just visible above it.
+if (isMobileProjectExperience() && projectsTrack?.lastElementChild) {
+    projectsTrack.prepend(projectsTrack.lastElementChild);
+    const rowHeight = projectsTrack.firstElementChild.getBoundingClientRect().height;
+    const offset = (projectsViewport.getBoundingClientRect().height - rowHeight) / 2 - rowHeight;
+    projectsTrack.style.transform = `translate3d(0, ${offset}px, 0)`;
+}
+
 updateVisibleProjects();
+
+if (isMobileProjectExperience()) {
+    setMobileProjectVideo(mobileProjectIndex);
+}
 
 if (bgVideo && reducedMotion.matches) {
     bgVideo.pause();
@@ -303,6 +432,23 @@ reducedMotion.addEventListener('change', ({ matches }) => {
         bgVideo?.pause();
     } else {
         bgVideo?.play().catch(() => {});
+    }
+});
+
+window.addEventListener('resize', () => {
+    if (isMobileProjectExperience()) {
+        setMobileProjectVideo(mobileProjectIndex);
+    } else if (bgVideo?.dataset.projectVideo) {
+        mobileVideoLayers.forEach((video, index) => {
+            video.style.visibility = index === 0 ? 'visible' : 'hidden';
+            if (index > 0) {
+                video.pause();
+            }
+        });
+        mobileVideoLayerIndex = 0;
+        bgVideo.removeAttribute('src');
+        delete bgVideo.dataset.projectVideo;
+        bgVideo.load();
     }
 });
 
