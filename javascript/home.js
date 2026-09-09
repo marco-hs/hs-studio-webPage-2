@@ -29,7 +29,7 @@ const supportsHover = window.matchMedia('(hover: hover)').matches;
 const projects = [
     {
         trigger: document.getElementById('suspended'),
-        images: ['../img/338_suspended-01.webp', '../img/338_suspended-03.webp', '../img/338_suspended-04.webp', '../img/338_suspended-06.webp', '../img/338_suspended-08.webp']
+        images: ['../img/338_suspended-sequence-01.webp', '../img/338_suspended-sequence-02.webp', '../img/338_suspended-sequence-03.webp', '../img/338_suspended-sequence-04.webp', '../img/338_suspended-sequence-05.webp']
     },
     {
         trigger: document.getElementById('polPablo'),
