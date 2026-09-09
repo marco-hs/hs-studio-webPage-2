@@ -255,7 +255,7 @@ section.projects {
 
 .projects-viewport {
     width: 100%;
-    height: calc(var(--project-row-height) * 5);
+    height: calc(var(--project-row-height) * 4.7);
     overflow: hidden;
     touch-action: pan-x;
     outline: none;
