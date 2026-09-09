@@ -28,6 +28,26 @@ const supportsHover = window.matchMedia('(hover: hover)').matches;
 
 const projects = [
     {
+        trigger: document.getElementById('suspended'),
+        images: ['../img/338_suspended-01.webp', '../img/338_suspended-03.webp', '../img/338_suspended-04.webp', '../img/338_suspended-06.webp', '../img/338_suspended-08.webp']
+    },
+    {
+        trigger: document.getElementById('polPablo'),
+        images: ['../img/350_pol-pablo-01.webp', '../img/350_pol-pablo-02.webp', '../img/350_pol-pablo-03.webp', '../img/350_pol-pablo-05.webp', '../img/350_pol-pablo-08.webp']
+    },
+    {
+        trigger: document.getElementById('contraCorriente'),
+        images: ['../img/238_contra-corriente-01.webp', '../img/238_contra-corriente-03.webp', '../img/238_contra-corriente-04.webp', '../img/238_contra-corriente-05.webp', '../img/238_contra-corriente-09.webp']
+    },
+    {
+        trigger: document.getElementById('dykora'),
+        images: ['../img/441_dykora-01.webp', '../img/441_dykora-02.webp', '../img/441_dykora-04.webp', '../img/441_dykora-06.webp', '../img/441_dykora-09.webp']
+    },
+    {
+        trigger: document.getElementById('clubDesahuciados'),
+        images: ['../img/285_club-desahuciados-01.webp', '../img/285_club-desahuciados-03.webp', '../img/285_club-desahuciados-05.webp', '../img/285_club-desahuciados-06.webp', '../img/285_club-desahuciados-09.webp']
+    },
+    {
         trigger: document.getElementById('cdm'),
         images: ['../img/529_CDM_cdm-01.webp', '../img/529_CDM_cdm-02.webp', '../img/529_CDM_cdm-03.webp', '../img/529_CDM_cdm-04.webp', '../img/529_CDM_cdm-05.webp', '../img/529_CDM_cdm-06.webp']
     },
@@ -101,26 +121,33 @@ function showNextFrame(timestamp) {
     animationFrameId = window.requestAnimationFrame(showNextFrame);
 }
 
-async function startSequence(project) {
-    if (!bgImage || !backgroundImage || reducedMotion.matches) {
+function startSequence(project) {
+    if (!bgImage || !backgroundImage) {
         return;
     }
 
     const currentActivation = ++activationId;
-    await preloadProject(project);
-
-    if (currentActivation !== activationId || reducedMotion.matches) {
-        return;
-    }
-
     window.cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
     activeProject = project;
     frameIndex = 0;
     lastFrameTime = performance.now();
     bgImage.src = project.images[frameIndex];
     backgroundImage.classList.add('is-active');
     bgVideo?.classList.add('is-hidden');
-    animationFrameId = window.requestAnimationFrame(showNextFrame);
+
+    if (reducedMotion.matches) {
+        return;
+    }
+
+    preloadProject(project).then(() => {
+        if (currentActivation !== activationId || reducedMotion.matches || activeProject !== project) {
+            return;
+        }
+
+        lastFrameTime = performance.now();
+        animationFrameId = window.requestAnimationFrame(showNextFrame);
+    });
 }
 
 function stopSequence() {
