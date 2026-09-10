@@ -244,7 +244,7 @@ section.projects {
     align-items: flex-start;
     justify-content: center;
     min-height: 100svh;
-    width: min(100% - 3rem, 90rem);
+    width: min(100% - 3rem, 76rem);
     margin: 0;
     padding: 7rem 2rem 7rem clamp(2rem, 9vw, 10rem);
     position: relative;
@@ -293,7 +293,7 @@ section.projects {
     padding: 0.08em 0.28em;
     width: fit-content;
     max-width: 100%;
-    font-size: clamp(1.25rem, 2.1vw, 2.6rem);
+    font-size: clamp(1.35rem, 3.1vw, 3.5rem);
     line-height: 1;
     letter-spacing: -0.025em;
     text-align: left;
@@ -323,6 +323,12 @@ section.projects {
 }
 
 @media (max-width: 768px) {
+    .home-page {
+        overflow: hidden;
+        overscroll-behavior: none;
+        touch-action: pan-x;
+    }
+
     .home-page .background-video {
         width: 100%;
         height: 100%;

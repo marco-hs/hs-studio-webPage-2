@@ -105,6 +105,7 @@ const visibleProjectCount = 5;
 const menuAnimationDuration = 620;
 let menuIsMoving = false;
 let wheelDelta = 0;
+let touchStartX = null;
 let touchStartY = null;
 let mobileProjectIndex = 0;
 let mobileVideoLayerIndex = 0;
@@ -350,22 +351,41 @@ projectsViewport?.addEventListener('wheel', (event) => {
     wheelDelta = 0;
 }, { passive: false });
 
-projectsViewport?.addEventListener('touchstart', (event) => {
-    touchStartY = event.changedTouches[0]?.clientY ?? null;
-}, { passive: true });
-
-projectsViewport?.addEventListener('touchend', (event) => {
-    if (touchStartY === null) {
+document.addEventListener('touchstart', (event) => {
+    if (!isMobileProjectExperience() || navMenu?.classList.contains('active') || event.touches.length !== 1) {
+        touchStartX = null;
+        touchStartY = null;
         return;
     }
 
+    touchStartX = event.touches[0]?.clientX ?? null;
+    touchStartY = event.touches[0]?.clientY ?? null;
+}, { passive: true });
+
+document.addEventListener('touchend', (event) => {
+    if (!isMobileProjectExperience() || touchStartX === null || touchStartY === null) {
+        return;
+    }
+
+    const touchEndX = event.changedTouches[0]?.clientX ?? touchStartX;
     const touchEndY = event.changedTouches[0]?.clientY ?? touchStartY;
-    const distance = touchStartY - touchEndY;
+    const distanceX = touchStartX - touchEndX;
+    const distanceY = touchStartY - touchEndY;
+    const startsInLowerThird = touchStartY >= window.innerHeight * (2 / 3);
+    const swipeThreshold = startsInLowerThird ? 16 : 30;
+    const isVerticalSwipe = Math.abs(distanceY) > Math.abs(distanceX) * 1.1;
+    touchStartX = null;
     touchStartY = null;
 
-    if (Math.abs(distance) >= 30) {
-        scrollProjectMenu(Math.sign(distance));
+    if (isVerticalSwipe && Math.abs(distanceY) >= swipeThreshold) {
+        event.preventDefault();
+        scrollProjectMenu(Math.sign(distanceY));
     }
+}, { passive: false });
+
+document.addEventListener('touchcancel', () => {
+    touchStartX = null;
+    touchStartY = null;
 }, { passive: true });
 
 projectsViewport?.addEventListener('keydown', (event) => {
