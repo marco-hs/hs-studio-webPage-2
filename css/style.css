@@ -299,7 +299,7 @@ section.projects {
     text-align: left;
     white-space: nowrap;
     color: #fff;
-    transition: color 180ms ease, background-color 180ms ease;
+    transition: color 180ms ease;
 }
 
 .project-title-link {
@@ -314,7 +314,6 @@ section.projects {
 .project-title-link:hover .project-title,
 .project-title-link:focus-visible .project-title {
     color: #9fa16e;
-    background-color: #000;
 }
 
 .project-title-link:focus-visible {
