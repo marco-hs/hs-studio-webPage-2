@@ -244,7 +244,7 @@ section.projects {
     align-items: flex-start;
     justify-content: center;
     min-height: 100svh;
-    width: min(100% - 3rem, 76rem);
+    width: min(100% - 3rem, 90rem);
     margin: 0;
     padding: 7rem 2rem 7rem clamp(2rem, 9vw, 10rem);
     position: relative;
@@ -293,13 +293,13 @@ section.projects {
     padding: 0.08em 0.28em;
     width: fit-content;
     max-width: 100%;
-    font-size: clamp(1.35rem, 3.1vw, 3.5rem);
+    font-size: clamp(1.25rem, 2.1vw, 2.6rem);
     line-height: 1;
     letter-spacing: -0.025em;
     text-align: left;
     white-space: nowrap;
     color: #fff;
-    transition: color 180ms ease;
+    transition: color 180ms ease, background-color 180ms ease;
 }
 
 .project-title-link {
@@ -319,6 +319,13 @@ section.projects {
 .project-title-link:focus-visible {
     outline: 3px solid #fff;
     outline-offset: 4px;
+}
+
+@media (min-width: 769px) {
+    .project-title-link:hover .project-title,
+    .project-title-link:focus-visible .project-title {
+        background-color: #000;
+    }
 }
 
 @media (max-width: 768px) {
