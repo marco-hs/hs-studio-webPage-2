@@ -59,32 +59,32 @@ const projects = [
     },
     {
         trigger: document.getElementById('hks'),
-        video: '../img/v01-4_117_HKS BARBERIA El Legado_H264_webOptimized_Rec709_Gama2-4_noGamaShift_TCCS.mp4',
+        video: '../img/117_el-legado-mobile-preview.mp4',
         images: ['../img/117_ElLegado_preview-01.webp', '../img/117_ElLegado_preview-02.webp', '../img/117_ElLegado_preview-03.webp', '../img/117_ElLegado_preview-04.webp']
     },
     {
         trigger: document.getElementById('agrupa'),
-        video: '../img/28_agrupaNowDownloadedFromVimeo_webOptimized.mp4',
+        video: '../img/28_agrupa-mobile-preview.mp4',
         images: ['../img/28_AgrupaNow_preview-01.webp', '../img/28_AgrupaNow_preview-02.webp', '../img/28_AgrupaNow_preview-03.webp', '../img/28_AgrupaNow_preview-04.webp']
     },
     {
         trigger: document.getElementById('sonidoAcido'),
-        video: '../img/178_V03_2-35-1_ONLINE1_h264_webOptimized2.mp4',
+        video: '../img/178_binocular-mobile-preview.mp4',
         images: ['../img/178_binocular_preview-01.webp', '../img/178_binocular_preview-02.webp', '../img/178_binocular_preview-03.webp', '../img/178_binocular_preview-04.webp', '../img/178_binocular_preview-05.webp']
     },
     {
         trigger: document.getElementById('fueraDelMolde'),
-        video: '../img/177_FDM_PROMO-01_Online_webOptimized.mp4',
+        video: '../img/177_fuera-del-molde-mobile-preview.mp4',
         images: ['../img/177_fueraDelMolde_preview-01.webp', '../img/177_fueraDelMolde_preview-02.webp', '../img/177_fueraDelMolde_preview-03.webp', '../img/177_fueraDelMolde_preview-04.webp', '../img/177_fueraDelMolde_preview-05.webp']
     },
     {
         trigger: document.getElementById('sprite'),
-        video: '../img/171_Daddy_Yankee_SM_V00_webOptimized.mp4',
+        video: '../img/171_sprite-mobile-preview.mp4',
         images: ['../img/171_SpriteDaddyYankee_preview-01.webp', '../img/171_SpriteDaddyYankee_preview-02.webp', '../img/171_SpriteDaddyYankee_preview-03.webp', '../img/171_SpriteDaddyYankee_preview-04.webp', '../img/171_SpriteDaddyYankee_preview-05.webp']
     },
     {
         trigger: document.getElementById('kraft'),
-        video: '../img/079_kraftRicosMomentos_09_cápsulaKraft_v01.5_16-9_h264_webOptimized_TCCs.mp4',
+        video: '../img/079_kraft-mobile-preview.mp4',
         images: ['../img/079_kraftRicosMomentos_preview-01.webp', '../img/079_kraftRicosMomentos_preview-02.webp', '../img/079_kraftRicosMomentos_preview-03.webp', '../img/079_kraftRicosMomentos_preview-04.webp', '../img/079_kraftRicosMomentos_preview-05.webp']
     }
 ];
@@ -105,14 +105,17 @@ const visibleProjectCount = 5;
 const menuAnimationDuration = 620;
 let menuIsMoving = false;
 let wheelDelta = 0;
-let touchStartX = null;
-let touchStartY = null;
+const mobileMedia = window.matchMedia('(max-width: 768px)');
 let mobileProjectIndex = 0;
-let mobileVideoLayerIndex = 0;
-const mobileVideoLayers = bgVideo ? [bgVideo] : [];
+let mobileReelInitialized = false;
+let mobileOriginalLinks = [];
+let mobileSlides = [];
+let activeMobileSlide = null;
+let mobileScrollTimer = null;
+let mobileResizeTimer = null;
 
 function isMobileProjectExperience() {
-    return window.matchMedia('(max-width: 768px)').matches;
+    return mobileMedia.matches;
 }
 
 function playDesktopBackgroundVideo() {
@@ -126,78 +129,164 @@ function playDesktopBackgroundVideo() {
     bgVideo.play().catch(() => {});
 }
 
-function ensureMobileVideoLayers() {
-    if (!bgVideo || mobileVideoLayers.length > 1) {
-        return;
+function createMobileSlideVideo(slide) {
+    const project = mobileProjects[Number(slide.dataset.projectIndex)];
+    if (!project?.video) {
+        return null;
     }
 
-    const secondLayer = bgVideo.cloneNode(false);
-    secondLayer.removeAttribute('id');
-    secondLayer.classList.add('mobile-project-video');
-    secondLayer.setAttribute('aria-hidden', 'true');
-    secondLayer.style.visibility = 'hidden';
-    bgVideo.insertAdjacentElement('afterend', secondLayer);
-    mobileVideoLayers.push(secondLayer);
+    const video = document.createElement('video');
+    video.className = 'mobile-slide-video';
+    video.dataset.src = project.video;
+    video.poster = project.images[0];
+    video.loop = true;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.preload = 'none';
+    video.controls = false;
+    video.disablePictureInPicture = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('aria-hidden', 'true');
+    slide.prepend(video);
+    return video;
 }
 
-function setVideoSource(video, project) {
-    video.dataset.projectVideo = project.video;
-    video.src = project.video;
-    video.load();
-    video.play().catch(() => {});
+function prepareMobileSlideVideo(video, eager = false) {
+    if (!video) {
+        return;
+    }
+
+    video.preload = eager ? 'auto' : 'metadata';
+    if (!video.getAttribute('src')) {
+        video.src = video.dataset.src;
+        video.load();
+    }
 }
 
-function setMobileProjectVideo(index, direction = 1, animate = false) {
-    const project = mobileProjects[index];
-    if (!isMobileProjectExperience() || !bgVideo || !project?.video) {
+function activateMobileSlide(slide) {
+    if (!slide || slide === activeMobileSlide) {
         return;
     }
 
-    ensureMobileVideoLayers();
-    const outgoingVideo = mobileVideoLayers[mobileVideoLayerIndex];
-    if (outgoingVideo.dataset.projectVideo === project.video) {
-        return;
-    }
+    activeMobileSlide = slide;
+    mobileProjectIndex = Number(slide.dataset.projectIndex);
+    const activePosition = mobileSlides.indexOf(slide);
 
-    if (!animate || reducedMotion.matches) {
-        setVideoSource(outgoingVideo, project);
-        return;
-    }
+    mobileSlides.forEach((candidate, index) => {
+        const video = candidate.querySelector('.mobile-slide-video');
+        const isActive = candidate === slide;
+        const isAdjacent = Math.abs(index - activePosition) <= 1;
+        candidate.classList.toggle('is-active', isActive);
 
-    const incomingIndex = mobileVideoLayerIndex === 0 ? 1 : 0;
-    const incomingVideo = mobileVideoLayers[incomingIndex];
-    const travel = direction > 0 ? 100 : -100;
-    outgoingVideo.insertAdjacentElement('afterend', incomingVideo);
-    incomingVideo.style.visibility = 'visible';
-    setVideoSource(incomingVideo, project);
+        if (isAdjacent) {
+            prepareMobileSlideVideo(video, isActive);
+        }
 
-    const timing = {
-        duration: menuAnimationDuration,
-        easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
-        fill: 'forwards'
-    };
-    const outgoingAnimation = outgoingVideo.animate(
-        [
-            { transform: 'translate3d(0, 0, 0) scale(1.04)' },
-            { transform: `translate3d(0, ${-travel}%, 0) scale(1.04)` }
-        ],
-        timing
-    );
-    const incomingAnimation = incomingVideo.animate(
-        [
-            { transform: `translate3d(0, ${travel}%, 0) scale(1.04)` },
-            { transform: 'translate3d(0, 0, 0) scale(1.04)' }
-        ],
-        timing
-    );
-
-    mobileVideoLayerIndex = incomingIndex;
-    Promise.all([outgoingAnimation.finished, incomingAnimation.finished]).finally(() => {
-        outgoingVideo.style.visibility = 'hidden';
-        outgoingVideo.pause();
-        outgoingAnimation.cancel();
-        incomingAnimation.cancel();
+        if (isActive && !reducedMotion.matches) {
+            video?.play().catch(() => {});
+        } else {
+            video?.pause();
+        }
     });
+}
+
+function jumpToMobileSlide(position) {
+    if (!projectsViewport || !mobileSlides[position]) {
+        return;
+    }
+
+    projectsViewport.style.scrollSnapType = 'none';
+    projectsViewport.scrollTop = position * projectsViewport.clientHeight;
+    activateMobileSlide(mobileSlides[position]);
+    window.requestAnimationFrame(() => {
+        projectsViewport.style.scrollSnapType = '';
+    });
+}
+
+function settleMobileReel() {
+    if (!projectsViewport || !mobileReelInitialized) {
+        return;
+    }
+
+    const position = Math.round(projectsViewport.scrollTop / projectsViewport.clientHeight);
+    const lastRealPosition = mobileOriginalLinks.length;
+
+    if (position === 0) {
+        jumpToMobileSlide(lastRealPosition);
+    } else if (position === lastRealPosition + 1) {
+        jumpToMobileSlide(1);
+    } else {
+        activateMobileSlide(mobileSlides[position]);
+    }
+}
+
+function handleMobileReelScroll() {
+    if (!projectsViewport || !mobileReelInitialized) {
+        return;
+    }
+
+    const position = Math.max(0, Math.min(
+        mobileSlides.length - 1,
+        Math.round(projectsViewport.scrollTop / projectsViewport.clientHeight)
+    ));
+    activateMobileSlide(mobileSlides[position]);
+    window.clearTimeout(mobileScrollTimer);
+    mobileScrollTimer = window.setTimeout(settleMobileReel, 100);
+}
+
+function initializeMobileReel() {
+    if (!projectsTrack || !projectsViewport || mobileReelInitialized || !mobileProjects.length) {
+        return;
+    }
+
+    bgVideo?.pause();
+    mobileReelInitialized = true;
+    mobileOriginalLinks = [...projectsTrack.querySelectorAll(':scope > .project-title-link')];
+    mobileOriginalLinks.forEach((link) => {
+        const project = projects.find((item) => item.trigger === link.querySelector('.project-title'));
+        link.dataset.projectIndex = String(mobileProjects.indexOf(project));
+        link.tabIndex = 0;
+        link.setAttribute('aria-hidden', 'false');
+    });
+
+    const lastClone = mobileOriginalLinks[mobileOriginalLinks.length - 1].cloneNode(true);
+    const firstClone = mobileOriginalLinks[0].cloneNode(true);
+    [lastClone, firstClone].forEach((clone) => {
+        clone.dataset.mobileClone = 'true';
+        clone.tabIndex = -1;
+        clone.setAttribute('aria-hidden', 'true');
+        clone.querySelector('[id]')?.removeAttribute('id');
+    });
+
+    projectsTrack.prepend(lastClone);
+    projectsTrack.append(firstClone);
+    mobileSlides = [...projectsTrack.querySelectorAll(':scope > .project-title-link')];
+    mobileSlides.forEach(createMobileSlideVideo);
+    projectsViewport.addEventListener('scroll', handleMobileReelScroll, { passive: true });
+
+    window.requestAnimationFrame(() => jumpToMobileSlide(1));
+}
+
+function teardownMobileReel() {
+    if (!projectsTrack || !projectsViewport || !mobileReelInitialized) {
+        return;
+    }
+
+    window.clearTimeout(mobileScrollTimer);
+    window.clearTimeout(mobileResizeTimer);
+    projectsViewport.removeEventListener('scroll', handleMobileReelScroll);
+    projectsTrack.querySelectorAll('[data-mobile-clone="true"]').forEach((clone) => clone.remove());
+    projectsTrack.querySelectorAll('.mobile-slide-video').forEach((video) => {
+        video.pause();
+        video.remove();
+    });
+    mobileOriginalLinks.forEach((link) => link.removeAttribute('data-project-index'));
+    projectsViewport.scrollTop = 0;
+    mobileSlides = [];
+    mobileOriginalLinks = [];
+    activeMobileSlide = null;
+    mobileReelInitialized = false;
 }
 
 function preloadProject(project) {
@@ -293,6 +382,14 @@ function scrollProjectMenu(direction) {
         return;
     }
 
+    if (isMobileProjectExperience()) {
+        projectsViewport?.scrollBy({
+            top: direction * projectsViewport.clientHeight,
+            behavior: reducedMotion.matches ? 'auto' : 'smooth'
+        });
+        return;
+    }
+
     const links = projectsTrack.querySelectorAll('.project-title-link');
     if (links.length <= visibleProjectCount) {
         return;
@@ -302,11 +399,6 @@ function scrollProjectMenu(direction) {
     stopSequence();
     projectsTrack.classList.add('is-moving');
 
-    if (isMobileProjectExperience()) {
-        mobileProjectIndex = (mobileProjectIndex + direction + mobileProjects.length) % mobileProjects.length;
-        setMobileProjectVideo(mobileProjectIndex, direction, true);
-    }
-
     const rowHeight = links[0].getBoundingClientRect().height;
     const duration = reducedMotion.matches ? 0 : menuAnimationDuration;
 
@@ -314,9 +406,7 @@ function scrollProjectMenu(direction) {
         projectsTrack.prepend(links[links.length - 1]);
     }
 
-    const mobileOffset = isMobileProjectExperience()
-        ? (projectsViewport.getBoundingClientRect().height - rowHeight) / 2 - rowHeight
-        : 0;
+    const mobileOffset = 0;
     const startY = direction > 0 ? mobileOffset : mobileOffset - rowHeight;
     const endY = direction > 0 ? mobileOffset - rowHeight : mobileOffset;
     const animation = projectsTrack.animate(
@@ -347,6 +437,10 @@ function scrollProjectMenu(direction) {
 }
 
 projectsViewport?.addEventListener('wheel', (event) => {
+    if (isMobileProjectExperience()) {
+        return;
+    }
+
     event.preventDefault();
 
     if (menuIsMoving) {
@@ -361,43 +455,6 @@ projectsViewport?.addEventListener('wheel', (event) => {
     scrollProjectMenu(Math.sign(wheelDelta));
     wheelDelta = 0;
 }, { passive: false });
-
-document.addEventListener('touchstart', (event) => {
-    if (!isMobileProjectExperience() || navMenu?.classList.contains('active') || event.touches.length !== 1) {
-        touchStartX = null;
-        touchStartY = null;
-        return;
-    }
-
-    touchStartX = event.touches[0]?.clientX ?? null;
-    touchStartY = event.touches[0]?.clientY ?? null;
-}, { passive: true });
-
-document.addEventListener('touchend', (event) => {
-    if (!isMobileProjectExperience() || touchStartX === null || touchStartY === null) {
-        return;
-    }
-
-    const touchEndX = event.changedTouches[0]?.clientX ?? touchStartX;
-    const touchEndY = event.changedTouches[0]?.clientY ?? touchStartY;
-    const distanceX = touchStartX - touchEndX;
-    const distanceY = touchStartY - touchEndY;
-    const startsInLowerThird = touchStartY >= window.innerHeight * (2 / 3);
-    const swipeThreshold = startsInLowerThird ? 16 : 30;
-    const isVerticalSwipe = Math.abs(distanceY) > Math.abs(distanceX) * 1.1;
-    touchStartX = null;
-    touchStartY = null;
-
-    if (isVerticalSwipe && Math.abs(distanceY) >= swipeThreshold) {
-        event.preventDefault();
-        scrollProjectMenu(Math.sign(distanceY));
-    }
-}, { passive: false });
-
-document.addEventListener('touchcancel', () => {
-    touchStartX = null;
-    touchStartY = null;
-}, { passive: true });
 
 projectsViewport?.addEventListener('keydown', (event) => {
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') {
@@ -439,61 +496,62 @@ if (bgImage && backgroundImage) {
     projects.forEach(bindProjectPreview);
 }
 
-// Start with the active title centered and its predecessor just visible above it.
-if (isMobileProjectExperience() && projectsTrack?.lastElementChild) {
-    projectsTrack.prepend(projectsTrack.lastElementChild);
-    const rowHeight = projectsTrack.firstElementChild.getBoundingClientRect().height;
-    const offset = (projectsViewport.getBoundingClientRect().height - rowHeight) / 2 - rowHeight;
-    projectsTrack.style.transform = `translate3d(0, ${offset}px, 0)`;
-}
-
-updateVisibleProjects();
-
 if (isMobileProjectExperience()) {
-    setMobileProjectVideo(mobileProjectIndex);
+    initializeMobileReel();
 } else {
+    updateVisibleProjects();
     playDesktopBackgroundVideo();
     bgVideo?.addEventListener('canplay', playDesktopBackgroundVideo, { once: true });
-}
-
-if (bgVideo && reducedMotion.matches && isMobileProjectExperience()) {
-    bgVideo.pause();
 }
 
 reducedMotion.addEventListener('change', ({ matches }) => {
     if (matches) {
         stopSequence();
         if (isMobileProjectExperience()) {
-            bgVideo?.pause();
+            activeMobileSlide?.querySelector('.mobile-slide-video')?.pause();
         } else {
             playDesktopBackgroundVideo();
         }
+    } else if (isMobileProjectExperience()) {
+        activeMobileSlide?.querySelector('.mobile-slide-video')?.play().catch(() => {});
     } else {
-        bgVideo?.play().catch(() => {});
+        playDesktopBackgroundVideo();
+    }
+});
+
+mobileMedia.addEventListener('change', ({ matches }) => {
+    if (matches) {
+        initializeMobileReel();
+    } else {
+        teardownMobileReel();
+        updateVisibleProjects();
+        bgVideo?.load();
+        playDesktopBackgroundVideo();
     }
 });
 
 window.addEventListener('resize', () => {
-    if (isMobileProjectExperience()) {
-        setMobileProjectVideo(mobileProjectIndex);
-    } else if (bgVideo?.dataset.projectVideo) {
-        mobileVideoLayers.forEach((video, index) => {
-            video.style.visibility = index === 0 ? 'visible' : 'hidden';
-            if (index > 0) {
-                video.pause();
-            }
-        });
-        mobileVideoLayerIndex = 0;
-        bgVideo.removeAttribute('src');
-        delete bgVideo.dataset.projectVideo;
-        bgVideo.load();
+    if (!isMobileProjectExperience() || !mobileReelInitialized) {
         playDesktopBackgroundVideo();
+        return;
     }
+
+    window.clearTimeout(mobileResizeTimer);
+    mobileResizeTimer = window.setTimeout(() => {
+        const activePosition = mobileSlides.findIndex((slide) => (
+            !slide.dataset.mobileClone
+            && Number(slide.dataset.projectIndex) === mobileProjectIndex
+        ));
+        jumpToMobileSlide(activePosition > 0 ? activePosition : 1);
+    }, 120);
 });
 
 document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
         window.cancelAnimationFrame(animationFrameId);
+        mobileSlides.forEach((slide) => slide.querySelector('.mobile-slide-video')?.pause());
+    } else if (isMobileProjectExperience() && !reducedMotion.matches) {
+        activeMobileSlide?.querySelector('.mobile-slide-video')?.play().catch(() => {});
     } else if (activeProject) {
         animationFrameId = window.requestAnimationFrame(showNextFrame);
     } else {
