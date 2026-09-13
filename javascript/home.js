@@ -115,6 +115,17 @@ function isMobileProjectExperience() {
     return window.matchMedia('(max-width: 768px)').matches;
 }
 
+function playDesktopBackgroundVideo() {
+    if (!bgVideo || isMobileProjectExperience()) {
+        return;
+    }
+
+    bgVideo.defaultMuted = true;
+    bgVideo.muted = true;
+    bgVideo.playsInline = true;
+    bgVideo.play().catch(() => {});
+}
+
 function ensureMobileVideoLayers() {
     if (!bgVideo || mobileVideoLayers.length > 1) {
         return;
@@ -440,16 +451,23 @@ updateVisibleProjects();
 
 if (isMobileProjectExperience()) {
     setMobileProjectVideo(mobileProjectIndex);
+} else {
+    playDesktopBackgroundVideo();
+    bgVideo?.addEventListener('canplay', playDesktopBackgroundVideo, { once: true });
 }
 
-if (bgVideo && reducedMotion.matches) {
+if (bgVideo && reducedMotion.matches && isMobileProjectExperience()) {
     bgVideo.pause();
 }
 
 reducedMotion.addEventListener('change', ({ matches }) => {
     if (matches) {
         stopSequence();
-        bgVideo?.pause();
+        if (isMobileProjectExperience()) {
+            bgVideo?.pause();
+        } else {
+            playDesktopBackgroundVideo();
+        }
     } else {
         bgVideo?.play().catch(() => {});
     }
@@ -469,6 +487,7 @@ window.addEventListener('resize', () => {
         bgVideo.removeAttribute('src');
         delete bgVideo.dataset.projectVideo;
         bgVideo.load();
+        playDesktopBackgroundVideo();
     }
 });
 
@@ -477,5 +496,7 @@ document.addEventListener('visibilitychange', () => {
         window.cancelAnimationFrame(animationFrameId);
     } else if (activeProject) {
         animationFrameId = window.requestAnimationFrame(showNextFrame);
+    } else {
+        playDesktopBackgroundVideo();
     }
 });
